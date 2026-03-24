@@ -1,0 +1,13 @@
+communiteq_powertools:
+  communiteq_powertools_enabled:
+    default: false
+    client: false
+  communiteq_powertools_sort_templates_alphabetically:
+    default: false
+    client: false
+  communiteq_powertools_post_delete_time_limit_enabled:
+    default: false
+    client: false
+  communiteq_powertools_post_delete_time_limit_hours:
+    default: 24
+    client: false

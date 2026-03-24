@@ -1,0 +1,6 @@
+en:
+  site_settings:
+    communiteq_powertools_enabled: "Enable the Communiteq Powertools plugin."
+    communiteq_powertools_sort_templates_alphabetically: "Sort templates alphabetically instead of based on usage."
+    communiteq_powertools_post_delete_time_limit_hours: "Number of hours where post deletion is allowed. If a post is older than this, a user cannot remove it."
+    communiteq_powertools_post_delete_time_limit_enabled: "Enable maximum time limit for post deletion."
