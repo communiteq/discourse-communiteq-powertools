@@ -1,0 +1,146 @@
+.communiteq-powertools-admin {
+  .admin-container {
+    padding: 20px 0;
+  }
+
+  h1 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  .help-text {
+    margin: 0 0 30px 0;
+    color: var(--secondary-medium);
+    font-size: 16px;
+  }
+
+  .powertools-nav-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--primary-low);
+    padding: 0;
+
+    .nav-tab {
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--primary-medium);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: -1px;
+
+      &:hover:not(.active) {
+        color: var(--primary);
+        background: var(--primary-very-low);
+      }
+
+      &.active {
+        color: var(--tertiary);
+        border-bottom-color: var(--tertiary);
+      }
+    }
+  }
+
+  .powertools-tab-content {
+    animation: fadeIn 0.2s ease-in;
+
+    h2 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .tab-description {
+      color: var(--secondary-medium);
+      margin: 0 0 25px 0;
+      line-height: 1.5;
+    }
+  }
+
+  .powertools-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 15px;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-low);
+
+    .setting-label {
+      flex: 1;
+      min-width: 0;
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0 0 5px 0;
+      }
+
+      .description {
+        margin: 0;
+        color: var(--secondary-medium);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+
+    .setting-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      input[type="number"] {
+        width: 100px;
+        padding: 8px 12px;
+        border: 1px solid var(--primary-low);
+        border-radius: 4px;
+        font-size: 14px;
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .communiteq-powertools-admin {
+    .setting-row {
+      flex-direction: column;
+
+      .setting-control {
+        width: 100%;
+      }
+    }
+
+    .powertools-nav-tabs {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+
+# https://github.com/communiteq/discourse-change-email
+# https://github.com/communiteq/discourse-multiple-hostnames
+# https://github.com/communiteq/discourse-sso-nostaffsync
+# https://github.com/communiteq/discourse-betterstatus/blob/master/plugin.rb
+# https://github.com/communiteq/discourse-increase-max-post-length

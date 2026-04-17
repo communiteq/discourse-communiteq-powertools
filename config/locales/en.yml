@@ -1,0 +1,26 @@
+en:
+  admin:
+    communiteq_powertools:
+      title: "Communiteq Powertools"
+      description: "Configure advanced features and site settings for your Discourse community."
+      
+      tabs:
+        general: "General"
+        general_description: "General site settings and template options"
+        posting: "Posting"
+        posting_description: "Control posting behavior and deletion limits"
+      
+      sort_templates_alphabetically: "Sort Templates Alphabetically"
+      sort_templates_alphabetically_description: |
+        When enabled, discourse-templates will display templates in alphabetical order 
+        instead of by most recent usage.
+      
+      post_delete_time_limit_enabled: "Enforce Post Deletion Time Limit"
+      post_delete_time_limit_enabled_description: |
+        When enabled, users will only be able to delete their own posts within the 
+        specified time window after creation.
+      
+      post_delete_time_limit_hours: "Post Deletion Time Limit (hours)"
+      post_delete_time_limit_hours_description: |
+        Number of hours after post creation during which users can delete their own posts. 
+        This setting only applies when the time limit is enabled above.
