@@ -27,17 +27,52 @@ export default class CommuniteqPowertoolsSettings extends Component {
     return !dep?.value;
   };
 
+  get settingSections() {
+    const sections = [];
+    const grouped = new Map();
+
+    this.settings.forEach((setting) => {
+      const key = setting.section || "__default";
+      if (!grouped.has(key)) {
+        grouped.set(key, {
+          id: key,
+          title: setting.section_title,
+          settings: [],
+        });
+        sections.push(grouped.get(key));
+      }
+      grouped.get(key).settings.push(setting);
+    });
+
+    return sections;
+  }
+
   @action
   async toggle(setting) {
     await this.save(setting, !setting.value);
   }
 
   @action
-  async updateNumber(setting, event) {
-    const val = parseInt(event.target.value, 10);
-    if (!isNaN(val)) {
+  async updateInput(setting, event) {
+    const raw = event.target.value.trim();
+
+    const validation = setting.validation;
+    if (validation === "non_negative_integer") {
+      if (!/^\d+$/.test(raw)) {
+        event.target.value = setting.value;
+        this.toasts.error({
+          duration: 3500,
+          data: { message: i18n("admin.communiteq_powertools.non_negative_integer_required") },
+        });
+        return;
+      }
+
+      const val = parseInt(raw, 10);
       await this.save(setting, val);
+      return;
     }
+
+    await this.save(setting, raw);
   }
 
   async save(setting, newValue) {
@@ -70,31 +105,41 @@ export default class CommuniteqPowertoolsSettings extends Component {
 
   <template>
     <div class="communiteq-powertools-settings admin-config-area__settings">
-      {{#each this.settings as |setting|}}
-        <div class="admin-config-area__setting-row setting-row
-          {{if (this.isDisabled setting) 'disabled'}}">
-          <div class="setting-label">
-            <label>{{i18n setting.label}}</label>
-            {{#if setting.description}}
-              <p class="setting-description">{{i18n setting.description}}</p>
-            {{/if}}
-          </div>
-          <div class="setting-control">
-            {{#if (eq setting.type "toggle")}}
-              <DToggleSwitch
-                @state={{setting.value}}
-                {{on "click" (fn this.toggle setting)}}
-              />
-            {{else if (eq setting.type "number")}}
-              <input
-                type="number"
-                value={{setting.value}}
-                disabled={{this.isDisabled setting}}
-                {{on "change" (fn this.updateNumber setting)}}
-                class="number-input"
-              />
-            {{/if}}
-          </div>
+      {{#each this.settingSections as |section|}}
+        <div class="cpt-settings-section">
+          {{#if section.title}}
+            <h3 class="cpt-settings-section__title">{{i18n section.title}}</h3>
+          {{/if}}
+
+          {{#each section.settings as |setting|}}
+            <div class="cpt-setting-row {{if (this.isDisabled setting) 'cpt-setting-row--disabled'}}">
+              <div class="cpt-setting-row__content">
+                <label class="cpt-setting-row__label">{{i18n setting.label}}</label>
+                {{#if setting.description}}
+                  <p class="cpt-setting-row__description">{{i18n setting.description}}</p>
+                {{/if}}
+              </div>
+              <div class="cpt-setting-row__control">
+                {{#if (eq setting.type "toggle")}}
+                  <DToggleSwitch
+                    @state={{setting.value}}
+                    disabled={{this.isDisabled setting}}
+                    {{on "click" (fn this.toggle setting)}}
+                  />
+                {{else if (eq setting.type "number")}}
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    value={{setting.value}}
+                    disabled={{this.isDisabled setting}}
+                    {{on "change" (fn this.updateInput setting)}}
+                    class="cpt-number-input"
+                  />
+                {{/if}}
+              </div>
+            </div>
+          {{/each}}
         </div>
       {{/each}}
     </div>

@@ -17,6 +17,8 @@ en:
         post_delete_time_limit_enabled_description: "When enabled, users will only be able to delete their own posts within the specified time window after creation."
         post_delete_time_limit_hours: "Post Deletion Time Limit (hours)"
         post_delete_time_limit_hours_description: "Number of hours after post creation during which users can delete their own posts. This setting only applies when the time limit is enabled above."
+        post_deletion_time_limit_heading: "Post Deletion Time Limit"
+        non_negative_integer_required: "Please enter a whole number greater than or equal to 0."
       site_settings:
         categories:
           communiteq_powertools: "Communiteq Powertools"
