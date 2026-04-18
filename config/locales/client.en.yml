@@ -35,6 +35,11 @@ en:
         force_moderation_new_topics_for_groups_description: "Members of selected groups will require approval when creating new topics."
         force_moderation_for_groups: "Force moderation for groups"
         force_moderation_for_groups_description: "Members of selected groups will require approval for all posts and replies."
+        auto_auto_grid_heading: "Auto Image Grid"
+        auto_auto_grid_enabled: "Enable auto auto grid"
+        auto_auto_grid_enabled_description: "Automatically wrap consecutive image uploads in [grid]...[/grid] when creating a post. Existing [grid] blocks are preserved."
+        auto_auto_grid_min_images: "Auto auto grid min images"
+        auto_auto_grid_min_images_description: "Minimum number of consecutive image uploads required before auto-wrapping them in a [grid] block."
         non_negative_integer_required: "Please enter a whole number greater than or equal to 0."
       site_settings:
         categories:

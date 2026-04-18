@@ -11,6 +11,7 @@ require_relative "lib/communiteq_powertools/discourse_templates_templates_serial
 require_relative "lib/communiteq_powertools/new_post_manager_extension"
 require_relative "lib/communiteq_powertools/post_guardian_extension"
 require_relative "lib/communiteq_powertools/settings_filter"
+require_relative "lib/communiteq_powertools/auto_image_grid"
 
 register_asset "stylesheets/communiteq-powertools-admin.scss"
 add_admin_route("communiteq_powertools.title", "discourse-communiteq-powertools", { use_new_show_route: true })
@@ -40,4 +41,13 @@ after_initialize do
     post "/admin/communiteq-powertools/acknowledge" => "admin/communiteq_powertools#acknowledge",
         constraints: AdminConstraint.new, defaults: { format: :json }
   end
+
+    on(:before_create_post) do |post, _opts|
+        next if !SiteSetting.communiteq_powertools_enabled || post.blank? || post.raw.blank?
+        next if !SiteSetting.communiteq_powertools_auto_auto_grid_enabled
+
+        min_images = [2, SiteSetting.communiteq_powertools_auto_auto_grid_min_images.to_i].max
+
+        post.raw = CommuniteqPowertools::AutoImageGrid.wrap(post.raw, min_images: min_images)
+    end
 end

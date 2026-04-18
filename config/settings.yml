@@ -14,6 +14,14 @@ communiteq_powertools:
     default: 24
     client: false
     hidden: true
+  communiteq_powertools_auto_auto_grid_enabled:
+    default: false
+    client: false
+    hidden: true
+  communiteq_powertools_auto_auto_grid_min_images:
+    default: 2
+    client: false
+    hidden: true
   communiteq_powertools_force_moderation_for_groups:
     default: ""
     client: false

@@ -37,6 +37,25 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
     ],
     posting: [
       {
+        key: "auto_auto_grid_enabled",
+        section: "auto_auto_grid",
+        section_title: "admin.communiteq_powertools.auto_auto_grid_heading",
+        label: "admin.communiteq_powertools.auto_auto_grid_enabled",
+        description: "admin.communiteq_powertools.auto_auto_grid_enabled_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "auto_auto_grid_min_images",
+        section: "auto_auto_grid",
+        section_title: "admin.communiteq_powertools.auto_auto_grid_heading",
+        label: "admin.communiteq_powertools.auto_auto_grid_min_images",
+        description: "admin.communiteq_powertools.auto_auto_grid_min_images_description",
+        type: "number",
+        depends_on: "auto_auto_grid_enabled",
+        validation: "non_negative_integer"
+      },
+      {
         key: "post_delete_time_limit_enabled",
         section: "post_deletion_time_limit",
         section_title: "admin.communiteq_powertools.post_deletion_time_limit_heading",
