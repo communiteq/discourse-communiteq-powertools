@@ -32,6 +32,8 @@ after_initialize do
         constraints: AdminConstraint.new
     get "/admin/plugins/discourse-communiteq-powertools/posting" => "admin/plugins#show",
         constraints: AdminConstraint.new
+    get "/admin/plugins/discourse-communiteq-powertools/logging" => "admin/plugins#show",
+        constraints: AdminConstraint.new
 
     # API lives outside /admin/plugins/ to avoid wildcard conflicts with core routes
     get "/admin/communiteq-powertools/config" => "admin/communiteq_powertools#index",

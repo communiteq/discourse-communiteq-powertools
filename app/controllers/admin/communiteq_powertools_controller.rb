@@ -92,6 +92,78 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
         type: "group_list",
         validation: "group_list"
       }
+    ],
+    logging: [
+      {
+        key: "ai_translation_verbose_logs",
+        site_setting_key: "ai_translation_verbose_logs",
+        section: "plugin_logging",
+        section_title: "admin.communiteq_powertools.logging_plugin_heading",
+        label: "admin.communiteq_powertools.ai_translation_verbose_logs",
+        description: "admin.communiteq_powertools.ai_translation_verbose_logs_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "oauth2_debug_auth",
+        site_setting_key: "oauth2_debug_auth",
+        section: "plugin_logging",
+        section_title: "admin.communiteq_powertools.logging_plugin_heading",
+        label: "admin.communiteq_powertools.oauth2_debug_auth",
+        description: "admin.communiteq_powertools.oauth2_debug_auth_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "openid_connect_verbose_logging",
+        site_setting_key: "openid_connect_verbose_logging",
+        section: "plugin_logging",
+        section_title: "admin.communiteq_powertools.logging_plugin_heading",
+        label: "admin.communiteq_powertools.openid_connect_verbose_logging",
+        description: "admin.communiteq_powertools.openid_connect_verbose_logging_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "discourse_id_verbose_logging",
+        site_setting_key: "discourse_id_verbose_logging",
+        section: "core_logging",
+        section_title: "admin.communiteq_powertools.logging_core_heading",
+        label: "admin.communiteq_powertools.discourse_id_verbose_logging",
+        description: "admin.communiteq_powertools.discourse_id_verbose_logging_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "verbose_upload_logging",
+        site_setting_key: "verbose_upload_logging",
+        section: "core_logging",
+        section_title: "admin.communiteq_powertools.logging_core_heading",
+        label: "admin.communiteq_powertools.verbose_upload_logging",
+        description: "admin.communiteq_powertools.verbose_upload_logging_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "verbose_auth_token_logging",
+        site_setting_key: "verbose_auth_token_logging",
+        section: "core_logging",
+        section_title: "admin.communiteq_powertools.logging_core_heading",
+        label: "admin.communiteq_powertools.verbose_auth_token_logging",
+        description: "admin.communiteq_powertools.verbose_auth_token_logging_description",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "site_setting_verbose_client_logging",
+        site_setting_key: "site_setting_verbose_client_logging",
+        section: "core_logging",
+        section_title: "admin.communiteq_powertools.logging_core_heading",
+        label: "admin.communiteq_powertools.site_setting_verbose_client_logging",
+        description: "admin.communiteq_powertools.site_setting_verbose_client_logging_description",
+        type: "toggle",
+        validation: "boolean"
+      }
     ]
   }.freeze
 
@@ -206,6 +278,12 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
         name: I18n.t("admin.communiteq_powertools.tabs.posting"),
         description: I18n.t("admin.communiteq_powertools.tabs.posting_description"),
         settings: settings_for(:posting)
+      },
+      {
+        id: "logging",
+        name: I18n.t("admin.communiteq_powertools.tabs.logging"),
+        description: I18n.t("admin.communiteq_powertools.tabs.logging_description"),
+        settings: settings_for(:logging)
       }
     ]
   end
@@ -219,8 +297,27 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
       if schema[:key] == "sort_templates_alphabetically"
         extra[:locked] = !templates_plugin_enabled?
       end
-      schema.merge(value: SiteSetting.public_send(site_setting_key_for(schema))).merge(extra)
+      if schema[:key] == "ai_translation_verbose_logs"
+        extra[:locked] = !plugin_enabled?("discourse-ai")
+        extra[:locked_hint] = "admin.communiteq_powertools.logging_requires_ai"
+      end
+      if schema[:key] == "oauth2_debug_auth"
+        extra[:locked] = !plugin_enabled?("discourse-oauth2-basic")
+        extra[:locked_hint] = "admin.communiteq_powertools.logging_requires_oauth2"
+      end
+      if schema[:key] == "openid_connect_verbose_logging"
+        extra[:locked] = !plugin_enabled?("discourse-openid-connect")
+        extra[:locked_hint] = "admin.communiteq_powertools.logging_requires_openid"
+      end
+      key = site_setting_key_for(schema)
+      value = SiteSetting.respond_to?(key) ? SiteSetting.public_send(key) : false
+      schema.merge(value:).merge(extra)
     end
+  end
+
+  def plugin_enabled?(name)
+    plugin = Discourse.plugins_by_name[name]
+    plugin&.enabled? || false
   end
 
   def templates_plugin_enabled?
