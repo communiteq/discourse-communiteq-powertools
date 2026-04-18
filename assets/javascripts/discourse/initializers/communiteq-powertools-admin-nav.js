@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { ajax } from "discourse/lib/ajax";
 
 const PLUGIN_ID = "discourse-communiteq-powertools";
 
@@ -13,16 +14,38 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "screwdriver-wrench");
-      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
-        {
-          label: "admin.communiteq_powertools.general_tab",
-          route: "adminPlugins.show.communiteq-powertools-general",
-        },
-        {
-          label: "admin.communiteq_powertools.posting_tab",
-          route: "adminPlugins.show.communiteq-powertools-posting",
-        },
-      ]);
+      ajax("/admin/communiteq-powertools/config.json")
+        .then((data) => {
+          const tabs = [
+            {
+              label: "admin.communiteq_powertools.about_tab",
+              route: "adminPlugins.show.communiteq-powertools-about",
+            },
+          ];
+
+          if (data?.acknowledged) {
+            tabs.push(
+              {
+                label: "admin.communiteq_powertools.general_tab",
+                route: "adminPlugins.show.communiteq-powertools-general",
+              },
+              {
+                label: "admin.communiteq_powertools.posting_tab",
+                route: "adminPlugins.show.communiteq-powertools-posting",
+              }
+            );
+          }
+
+          api.addAdminPluginConfigurationNav(PLUGIN_ID, tabs);
+        })
+        .catch(() => {
+          api.addAdminPluginConfigurationNav(PLUGIN_ID, [
+            {
+              label: "admin.communiteq_powertools.about_tab",
+              route: "adminPlugins.show.communiteq-powertools-about",
+            },
+          ]);
+        });
     });
   },
 };

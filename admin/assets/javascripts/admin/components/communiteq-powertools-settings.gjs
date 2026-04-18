@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import eq from "truth-helpers/helpers/eq";
@@ -11,6 +12,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class CommuniteqPowertoolsSettings extends Component {
+  @service site;
   @service toasts;
   @tracked settings = [];
 
@@ -20,6 +22,9 @@ export default class CommuniteqPowertoolsSettings extends Component {
   }
 
   isDisabled = (setting) => {
+    if (setting.locked) {
+      return true;
+    }
     if (!setting.depends_on) {
       return false;
     }
@@ -75,6 +80,42 @@ export default class CommuniteqPowertoolsSettings extends Component {
     await this.save(setting, raw);
   }
 
+  @action
+  async toggleCategoryNesting(setting) {
+    const newValue = setting.value === 3 ? 2 : 3;
+    await this.save(setting, newValue);
+  }
+
+  @action
+  async updateSelect(setting, event) {
+    const raw = event.target.value;
+    const value = setting.validation === "category_nesting" ? parseInt(raw, 10) : raw;
+    await this.save(setting, value);
+  }
+
+  groupListValue(setting) {
+    if (Array.isArray(setting.value)) {
+      return setting.value;
+    }
+
+    const raw = setting.value?.toString() || "";
+    if (!raw.length) {
+      return [];
+    }
+
+    return raw.split("|").filter(Boolean).map((id) => parseInt(id, 10));
+  }
+
+  @action
+  async updateGroupList(setting, selectedGroupIds) {
+    const normalized = (selectedGroupIds || [])
+      .map((id) => id?.toString())
+      .filter(Boolean)
+      .join("|");
+
+    await this.save(setting, normalized);
+  }
+
   async save(setting, newValue) {
     const old = setting.value;
     // Optimistically update so the toggle reflects immediately
@@ -99,6 +140,18 @@ export default class CommuniteqPowertoolsSettings extends Component {
       this.settings = this.settings.map((s) =>
         s.key === setting.key ? { ...s, value: old } : s
       );
+
+      if (setting.validation === "category_nesting") {
+        this.toasts.error({
+          duration: 4000,
+          data: {
+            message: i18n(
+              "admin.communiteq_powertools.max_category_nesting_requires_flattening"
+            ),
+          },
+        });
+      }
+
       popupAjaxError(error);
     }
   }
@@ -112,7 +165,7 @@ export default class CommuniteqPowertoolsSettings extends Component {
           {{/if}}
 
           {{#each section.settings as |setting|}}
-            <div class="cpt-setting-row {{if (this.isDisabled setting) 'cpt-setting-row--disabled'}}">
+            <div class="cpt-setting-row {{if (this.isDisabled setting) 'cpt-setting-row--disabled'}} {{if setting.locked 'cpt-setting-row--locked'}}">
               <div class="cpt-setting-row__content">
                 <label class="cpt-setting-row__label">{{i18n setting.label}}</label>
                 {{#if setting.description}}
@@ -136,9 +189,37 @@ export default class CommuniteqPowertoolsSettings extends Component {
                     {{on "change" (fn this.updateInput setting)}}
                     class="cpt-number-input"
                   />
+                {{else if (eq setting.type "category_nesting_toggle")}}
+                  <DToggleSwitch
+                    @state={{eq setting.value 3}}
+                    disabled={{setting.locked}}
+                    {{on "click" (fn this.toggleCategoryNesting setting)}}
+                  />
+                {{else if (eq setting.type "group_list")}}
+                  <GroupChooser
+                    @content={{this.site.groups}}
+                    @value={{this.groupListValue setting}}
+                    @onChange={{fn this.updateGroupList setting}}
+                    disabled={{this.isDisabled setting}}
+                  />
+                {{else if (eq setting.type "select")}}
+                  <select
+                    class="cpt-select-input"
+                    disabled={{this.isDisabled setting}}
+                    {{on "change" (fn this.updateSelect setting)}}
+                  >
+                    {{#each setting.choices as |choice|}}
+                      <option value={{choice.value}} selected={{eq choice.value setting.value}}>
+                        {{i18n choice.label}}
+                      </option>
+                    {{/each}}
+                  </select>
                 {{/if}}
               </div>
             </div>
+            {{#if setting.locked}}
+              <p class="cpt-setting-locked-hint">{{i18n setting.locked_hint}}</p>
+            {{/if}}
           {{/each}}
         </div>
       {{/each}}

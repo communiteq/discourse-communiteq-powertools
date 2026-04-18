@@ -5,8 +5,32 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
     general: [
       {
         key: "sort_templates_alphabetically",
+        section: "templates",
+        section_title: "admin.communiteq_powertools.templates_heading",
         label: "admin.communiteq_powertools.sort_templates_alphabetically",
         description: "admin.communiteq_powertools.sort_templates_alphabetically_description",
+        locked_hint: "admin.communiteq_powertools.templates_plugin_required",
+        type: "toggle",
+        validation: "boolean"
+      },
+      {
+        key: "max_category_nesting",
+        site_setting_key: "max_category_nesting",
+        section: "category_structure",
+        section_title: "admin.communiteq_powertools.category_structure_heading",
+        label: "admin.communiteq_powertools.max_category_nesting",
+        description: "admin.communiteq_powertools.max_category_nesting_description",
+        type: "category_nesting_toggle",
+        locked_hint: "admin.communiteq_powertools.max_category_nesting_requires_flattening",
+        validation: "category_nesting"
+      },
+      {
+        key: "enable_badge_sql",
+        site_setting_key: "enable_badge_sql",
+        section: "badge_sql",
+        section_title: "admin.communiteq_powertools.badge_sql_heading",
+        label: "admin.communiteq_powertools.enable_badge_sql",
+        description: "admin.communiteq_powertools.enable_badge_sql_description",
         type: "toggle",
         validation: "boolean"
       }
@@ -30,6 +54,24 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
         type: "number",
         depends_on: "post_delete_time_limit_enabled",
         validation: "non_negative_integer"
+      },
+      {
+        key: "force_moderation_new_topics_for_groups",
+        section: "force_moderation_by_groups",
+        section_title: "admin.communiteq_powertools.force_moderation_by_groups_heading",
+        label: "admin.communiteq_powertools.force_moderation_new_topics_for_groups",
+        description: "admin.communiteq_powertools.force_moderation_new_topics_for_groups_description",
+        type: "group_list",
+        validation: "group_list"
+      },
+      {
+        key: "force_moderation_for_groups",
+        section: "force_moderation_by_groups",
+        section_title: "admin.communiteq_powertools.force_moderation_by_groups_heading",
+        label: "admin.communiteq_powertools.force_moderation_for_groups",
+        description: "admin.communiteq_powertools.force_moderation_for_groups_description",
+        type: "group_list",
+        validation: "group_list"
       }
     ]
   }.freeze
@@ -37,8 +79,15 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
   def index
     render json: {
       features: get_features_config,
-      enabled: SiteSetting.communiteq_powertools_enabled
+      enabled: SiteSetting.communiteq_powertools_enabled,
+      acknowledged: current_user.custom_fields["communiteq_powertools_acknowledged"] == "true"
     }
+  end
+
+  def acknowledge
+    current_user.custom_fields["communiteq_powertools_acknowledged"] = "true"
+    current_user.save_custom_fields(true)
+    render json: { success: true }
   end
 
   def update
@@ -58,7 +107,7 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
       return
     end
 
-    setting_key = "communiteq_powertools_#{setting_name}".to_sym
+    setting_key = site_setting_key_for(schema).to_sym
 
     if SiteSetting.respond_to?(setting_key)
       begin
@@ -89,8 +138,14 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
     case type
     when "toggle"
       raw_value == true || raw_value == "true"
-    when "number"
+    when "number", "category_nesting_toggle"
       raw_value.to_i
+    when "group_list"
+      if raw_value.is_a?(Array)
+        raw_value.map(&:to_s).reject(&:blank?).join("|")
+      else
+        raw_value.to_s
+      end
     else
       raw_value
     end
@@ -102,9 +157,21 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
       value == true || value == false
     when "non_negative_integer"
       value.is_a?(Integer) && value >= 0
+    when "category_nesting"
+      [2, 3].include?(value) && (value == 3 || !third_level_categories_exist?)
+    when "group_list"
+      value.blank? || value.match?(/\A\d+(\|\d+)*\z/)
     else
       true
     end
+  end
+
+  def site_setting_key_for(schema)
+    schema[:site_setting_key].presence || "communiteq_powertools_#{schema[:key]}"
+  end
+
+  def third_level_categories_exist?
+    Category.joins(parent_category: :parent_category).exists?
   end
 
   def get_features_config
@@ -126,9 +193,19 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
 
   def settings_for(feature)
     FEATURE_SETTING_SCHEMAS.fetch(feature).map do |schema|
-      schema.merge(
-        value: SiteSetting.public_send("communiteq_powertools_#{schema[:key]}")
-      )
+      extra = {}
+      if schema[:validation] == "category_nesting"
+        extra[:locked] = SiteSetting.max_category_nesting == 3 && third_level_categories_exist?
+      end
+      if schema[:key] == "sort_templates_alphabetically"
+        extra[:locked] = !templates_plugin_enabled?
+      end
+      schema.merge(value: SiteSetting.public_send(site_setting_key_for(schema))).merge(extra)
     end
+  end
+
+  def templates_plugin_enabled?
+    plugin = Discourse.plugins_by_name["discourse-templates"]
+    plugin&.enabled? || false
   end
 end

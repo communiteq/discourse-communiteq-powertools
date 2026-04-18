@@ -7,5 +7,5 @@ export default <template>
     @path="/admin/plugins/discourse-communiteq-powertools/posting"
     @label={{i18n "admin.communiteq_powertools.posting_tab"}}
   />
-  <CommuniteqPowertoolsSettings @tab={{@controller.model}} />
+  <CommuniteqPowertoolsSettings @tab={{@controller.model.tab}} />
 </template>

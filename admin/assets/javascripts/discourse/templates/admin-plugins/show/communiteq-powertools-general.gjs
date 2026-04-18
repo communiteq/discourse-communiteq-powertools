@@ -7,5 +7,5 @@ export default <template>
     @path="/admin/plugins/discourse-communiteq-powertools/general"
     @label={{i18n "admin.communiteq_powertools.general_tab"}}
   />
-  <CommuniteqPowertoolsSettings @tab={{@controller.model}} />
+  <CommuniteqPowertoolsSettings @tab={{@controller.model.tab}} />
 </template>

@@ -1,3 +1,31 @@
+.cpt-about {
+  max-width: 700px;
+
+  &__banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 1.5em;
+  }
+
+  &__disclaimer {
+    background: var(--highlight-low);
+    border-left: 4px solid var(--tertiary);
+    border-radius: 4px;
+    padding: 1em 1.25em;
+
+    p {
+      margin: 0 0 1em;
+      color: var(--primary);
+    }
+  }
+
+  &__understand-btn {
+    display: inline-block;
+  }
+}
+
 .cpt-settings-section {
   margin-bottom: 0.25em;
 
@@ -50,6 +78,19 @@
 .cpt-number-input {
   width: 6em;
   text-align: right;
+}
+
+.cpt-select-input {
+  min-width: 9em;
+}
+
+.cpt-setting-locked-hint {
+  margin: 0 0 0.6em;
+  padding: 0.4em 0.6em;
+  border-left: 3px solid var(--warning-medium, #f0ad4e);
+  background: var(--highlight-bg, var(--primary-very-low));
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
 }
 .communiteq-powertools-admin {
   .admin-container {

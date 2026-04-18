@@ -8,6 +8,8 @@ module CommuniteqPowertools
         communiteq_powertools_sort_templates_alphabetically
         communiteq_powertools_post_delete_time_limit_enabled
         communiteq_powertools_post_delete_time_limit_hours
+        communiteq_powertools_force_moderation_for_groups
+        communiteq_powertools_force_moderation_new_topics_for_groups
       ]
 
       settings.reject do |key, _value|

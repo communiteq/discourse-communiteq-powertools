@@ -14,3 +14,17 @@ communiteq_powertools:
     default: 24
     client: false
     hidden: true
+  communiteq_powertools_force_moderation_for_groups:
+    default: ""
+    client: false
+    hidden: true
+    type: group_list
+    allow_any: false
+    refresh: true
+  communiteq_powertools_force_moderation_new_topics_for_groups:
+    default: ""
+    client: false
+    hidden: true
+    type: group_list
+    allow_any: false
+    refresh: true
