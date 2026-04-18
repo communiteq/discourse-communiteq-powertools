@@ -16,12 +16,7 @@ export default {
       api.setAdminPluginIcon(PLUGIN_ID, "screwdriver-wrench");
       ajax("/admin/communiteq-powertools/config.json")
         .then((data) => {
-          const tabs = [
-            {
-              label: "admin.communiteq_powertools.about_tab",
-              route: "adminPlugins.show.communiteq-powertools-about",
-            },
-          ];
+          const tabs = [];
 
           if (data?.acknowledged) {
             tabs.push(
@@ -39,6 +34,11 @@ export default {
               }
             );
           }
+
+           tabs.push({
+             label: "admin.communiteq_powertools.about_tab",
+             route: "adminPlugins.show.communiteq-powertools-about",
+           });
 
           api.addAdminPluginConfigurationNav(PLUGIN_ID, tabs);
         })
