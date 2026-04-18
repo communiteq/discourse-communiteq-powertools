@@ -4,7 +4,7 @@ en:
       communiteq_powertools:
         title: "Communiteq Powertools"
         about_tab: "About"
-        about_disclaimer: "This plugin provides advanced configuration controls that can significantly affect the behavior of your Discourse community. Please review the documentation before making changes. Use these settings with care."
+        about_disclaimer: "This plugin provides advanced configuration controls that can significantly affect the behavior and performance of your Discourse community. Please review the documentation before making changes. Use these settings with care."
         about_i_understand: "I understand"
         general_tab: "General"
         posting_tab: "Posting"
