@@ -202,7 +202,14 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
 
     if SiteSetting.respond_to?(setting_key)
       begin
+        prev_value = SiteSetting.public_send(setting_key)
         SiteSetting.set(setting_key, value)
+        StaffActionLogger.new(current_user).log_site_setting_change(
+          setting_key,
+          prev_value,
+          value,
+          { context: "Communiteq Powertools" }
+        )
         render json: { success: true }
       rescue => e
         render json: { error: e.message }, status: 400
