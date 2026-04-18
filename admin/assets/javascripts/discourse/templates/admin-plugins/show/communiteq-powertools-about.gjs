@@ -1,11 +1,11 @@
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import Component from "@glimmer/component";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { i18n } from "discourse-i18n";
+import { action } from "@ember/object";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { i18n } from "discourse-i18n";
 
 class CommuniteqPowertoolsAbout extends Component {
   @tracked acknowledged = this.args.model?.acknowledged ?? false;
@@ -17,7 +17,9 @@ class CommuniteqPowertoolsAbout extends Component {
     try {
       await ajax("/admin/communiteq-powertools/acknowledge", { type: "POST" });
       this.acknowledged = true;
-      window.location.assign("/admin/plugins/discourse-communiteq-powertools/general");
+      window.location.assign(
+        "/admin/plugins/discourse-communiteq-powertools/general"
+      );
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -54,6 +56,4 @@ class CommuniteqPowertoolsAbout extends Component {
   </template>
 }
 
-export default <template>
-  <CommuniteqPowertoolsAbout @model={{@controller.model}} />
-</template>
+<template><CommuniteqPowertoolsAbout @model={{@controller.model}} /></template>

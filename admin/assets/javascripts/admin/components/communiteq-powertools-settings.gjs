@@ -1,25 +1,21 @@
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import eq from "truth-helpers/helpers/eq";
-import { i18n } from "discourse-i18n";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { eq } from "truth-helpers";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { i18n } from "discourse-i18n";
 
 export default class CommuniteqPowertoolsSettings extends Component {
   @service site;
   @service toasts;
-  @tracked settings = [];
 
-  constructor(owner, args) {
-    super(owner, args);
-    this.settings = [...(args.tab?.settings ?? [])];
-  }
+  @tracked settings = [];
 
   isDisabled = (setting) => {
     if (setting.locked) {
@@ -31,6 +27,11 @@ export default class CommuniteqPowertoolsSettings extends Component {
     const dep = this.settings.find((s) => s.key === setting.depends_on);
     return !dep?.value;
   };
+
+  constructor(owner, args) {
+    super(owner, args);
+    this.settings = [...(args.tab?.settings ?? [])];
+  }
 
   get settingSections() {
     const sections = [];
@@ -67,7 +68,11 @@ export default class CommuniteqPowertoolsSettings extends Component {
         event.target.value = setting.value;
         this.toasts.error({
           duration: 3500,
-          data: { message: i18n("admin.communiteq_powertools.non_negative_integer_required") },
+          data: {
+            message: i18n(
+              "admin.communiteq_powertools.non_negative_integer_required"
+            ),
+          },
         });
         return;
       }
@@ -89,7 +94,8 @@ export default class CommuniteqPowertoolsSettings extends Component {
   @action
   async updateSelect(setting, event) {
     const raw = event.target.value;
-    const value = setting.validation === "category_nesting" ? parseInt(raw, 10) : raw;
+    const value =
+      setting.validation === "category_nesting" ? parseInt(raw, 10) : raw;
     await this.save(setting, value);
   }
 
@@ -103,7 +109,10 @@ export default class CommuniteqPowertoolsSettings extends Component {
       return [];
     }
 
-    return raw.split("|").filter(Boolean).map((id) => parseInt(id, 10));
+    return raw
+      .split("|")
+      .filter(Boolean)
+      .map((id) => parseInt(id, 10));
   }
 
   @action
@@ -165,11 +174,19 @@ export default class CommuniteqPowertoolsSettings extends Component {
           {{/if}}
 
           {{#each section.settings as |setting|}}
-            <div class="cpt-setting-row {{if (this.isDisabled setting) 'cpt-setting-row--disabled'}} {{if setting.locked 'cpt-setting-row--locked'}}">
+            <div
+              class="cpt-setting-row
+                {{if (this.isDisabled setting) 'cpt-setting-row--disabled'}}
+                {{if setting.locked 'cpt-setting-row--locked'}}"
+            >
               <div class="cpt-setting-row__content">
-                <label class="cpt-setting-row__label">{{i18n setting.label}}</label>
+                <label class="cpt-setting-row__label">{{i18n
+                    setting.label
+                  }}</label>
                 {{#if setting.description}}
-                  <p class="cpt-setting-row__description">{{i18n setting.description}}</p>
+                  <p class="cpt-setting-row__description">{{i18n
+                      setting.description
+                    }}</p>
                 {{/if}}
               </div>
               <div class="cpt-setting-row__control">
@@ -209,7 +226,10 @@ export default class CommuniteqPowertoolsSettings extends Component {
                     {{on "change" (fn this.updateSelect setting)}}
                   >
                     {{#each setting.choices as |choice|}}
-                      <option value={{choice.value}} selected={{eq choice.value setting.value}}>
+                      <option
+                        value={{choice.value}}
+                        selected={{eq choice.value setting.value}}
+                      >
                         {{i18n choice.label}}
                       </option>
                     {{/each}}
@@ -218,7 +238,9 @@ export default class CommuniteqPowertoolsSettings extends Component {
               </div>
             </div>
             {{#if setting.locked}}
-              <p class="cpt-setting-locked-hint">{{i18n setting.locked_hint}}</p>
+              <p class="cpt-setting-locked-hint">{{i18n
+                  setting.locked_hint
+                }}</p>
             {{/if}}
           {{/each}}
         </div>
