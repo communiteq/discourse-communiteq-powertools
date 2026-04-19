@@ -29,6 +29,10 @@ export default {
                 route: "adminPlugins.show.communiteq-powertools-posting",
               },
               {
+                label: "admin.communiteq_powertools.moderation_tab",
+                route: "adminPlugins.show.communiteq-powertools-moderation",
+              },
+              {
                 label: "admin.communiteq_powertools.logging_tab",
                 route: "adminPlugins.show.communiteq-powertools-logging",
               }

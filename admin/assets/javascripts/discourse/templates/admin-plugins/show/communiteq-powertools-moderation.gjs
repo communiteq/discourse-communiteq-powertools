@@ -1,0 +1,11 @@
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import { i18n } from "discourse-i18n";
+import CommuniteqPowertoolsSettings from "discourse/plugins/discourse-communiteq-powertools/admin/components/communiteq-powertools-settings";
+
+<template>
+  <DBreadcrumbsItem
+    @path="/admin/plugins/discourse-communiteq-powertools/moderation"
+    @label={{i18n "admin.communiteq_powertools.moderation_tab"}}
+  />
+  <CommuniteqPowertoolsSettings @tab={{@controller.model.tab}} />
+</template>
