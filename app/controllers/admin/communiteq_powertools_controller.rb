@@ -33,6 +33,16 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
         description: "admin.communiteq_powertools.enable_badge_sql_description",
         type: "toggle",
         validation: "boolean"
+      },
+      {
+        key: "enable_passkeys",
+        site_setting_key: "enable_passkeys",
+        section: "authentication",
+        section_title: "admin.communiteq_powertools.authentication_heading",
+        label: "admin.communiteq_powertools.enable_passkeys",
+        description: "admin.communiteq_powertools.enable_passkeys_description",
+        type: "toggle",
+        validation: "boolean"
       }
     ],
     posting: [

@@ -30,6 +30,9 @@ en:
         badge_sql_heading: "Badge SQL"
         enable_badge_sql: "Enable badge SQL"
         enable_badge_sql_description: Allow SQL-based badge queries in the badge admin interface. <a target="_blank" href="https://meta.discourse.org/t/enable-badge-sql/47894">See Meta Topic</a>.
+        authentication_heading: "Authentication"
+        enable_passkeys: "Enable passkeys"
+        enable_passkeys_description: "Allow users to sign in with passkeys."
         post_delete_time_limit_enabled: "Enforce Post Deletion Time Limit"
         post_delete_time_limit_enabled_description: "When enabled, users will only be able to delete their own posts within the specified time window after creation."
         post_delete_time_limit_hours: "Post Deletion Time Limit (hours)"
