@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
@@ -184,8 +185,8 @@ export default class CommuniteqPowertoolsSettings extends Component {
                     setting.label
                   }}</label>
                 {{#if setting.description}}
-                  <p class="cpt-setting-row__description">{{i18n
-                      setting.description
+                  <p class="cpt-setting-row__description">{{htmlSafe
+                      (i18n setting.description)
                     }}</p>
                 {{/if}}
               </div>
