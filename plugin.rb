@@ -1,6 +1,6 @@
 # name: discourse-communiteq-powertools
 # about: Communiteq Powertools
-# version: 2026.1
+# version: 2026.1.1
 # authors: Communiteq
 # url: https://github.com/communiteq/discourse-communiteq-powertools
 

@@ -103,16 +103,6 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
         description: "admin.communiteq_powertools.force_moderation_for_groups_description",
         type: "group_list",
         validation: "group_list"
-      },
-      {
-        key: "can_permanently_delete",
-        site_setting_key: "can_permanently_delete",
-        section: "moderation_permissions",
-        section_title: "admin.communiteq_powertools.moderation_permissions_heading",
-        label: "admin.communiteq_powertools.can_permanently_delete",
-        description: "admin.communiteq_powertools.can_permanently_delete_description",
-        type: "toggle",
-        validation: "boolean"
       }
     ],
     logging: [

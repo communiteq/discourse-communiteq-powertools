@@ -44,8 +44,6 @@ en:
         force_moderation_for_groups: "Force moderation for groups"
         force_moderation_for_groups_description: "Members of selected groups will require approval for all posts and replies."
         moderation_permissions_heading: "Moderation Permissions"
-        can_permanently_delete: "Allow permanent deletion by staff"
-        can_permanently_delete_description: When enabled, staff can permanently delete posts and topics. <a target="_blank" href="https://meta.discourse.org/t/introducing-permanently-delete-post-functionality/207109">See Meta Topic</a>.
         auto_auto_grid_heading: "Auto Image Grid"
         auto_auto_grid_enabled: "Enable auto auto grid"
         auto_auto_grid_enabled_description: "Automatically wrap consecutive image uploads in [grid]...[/grid] when creating a post. Existing [grid] blocks are preserved."
