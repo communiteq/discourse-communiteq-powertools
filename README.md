@@ -25,6 +25,7 @@ A comprehensive admin interface for managing advanced Discourse settings and fea
 - **Sort Templates Alphabetically**: When enabled, Templates will display in alphabetical order instead of by most recent usage
 - **Enable 3-level category nesting**: Toggle `max_category_nesting` between 2 and 3 with safeguards when third-level categories exist
 - **Enable badge SQL**: Toggle SQL-based badge query capability
+- **Allow embedding site in an iframe**: Toggle `allow_embedding_site_in_an_iframe` for iframe embedding scenarios
 
 ### Posting Tab
 - **Auto Auto Grid (Enabled)**: Toggle server-side auto-grid wrapping for uploaded images during post creation

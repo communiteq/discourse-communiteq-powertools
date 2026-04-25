@@ -43,6 +43,16 @@ class Admin::CommuniteqPowertoolsController < Admin::AdminController
         description: "admin.communiteq_powertools.enable_passkeys_description",
         type: "toggle",
         validation: "boolean"
+      },
+      {
+        key: "allow_embedding_site_in_an_iframe",
+        site_setting_key: "allow_embedding_site_in_an_iframe",
+        section: "embedding",
+        section_title: "admin.communiteq_powertools.embedding_heading",
+        label: "admin.communiteq_powertools.allow_embedding_site_in_an_iframe",
+        description: "admin.communiteq_powertools.allow_embedding_site_in_an_iframe_description",
+        type: "toggle",
+        validation: "boolean"
       }
     ],
     posting: [

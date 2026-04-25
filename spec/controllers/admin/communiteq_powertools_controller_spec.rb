@@ -52,6 +52,25 @@ describe Admin::CommuniteqPowertoolsController do
       expect(SiteSetting.enable_badge_sql).to eq(true)
     end
 
+    it "updates allow_embedding_site_in_an_iframe and logs site setting change" do
+      current_value = SiteSetting.allow_embedding_site_in_an_iframe
+      new_value = !current_value
+
+      expect do
+        post :update,
+             params: {
+               feature: "general",
+               setting_name: "allow_embedding_site_in_an_iframe",
+               value: new_value,
+             },
+             format: :json
+      end.to change { UserHistory.where(action: UserHistory.actions[:change_site_setting]).count }.by(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(SiteSetting.allow_embedding_site_in_an_iframe).to eq(new_value)
+    end
+
     it "returns 422 for invalid values" do
       post :update,
            params: {

@@ -14,6 +14,11 @@ en:
       sort_templates_alphabetically_description: |
         When enabled, discourse-templates will display templates in alphabetical order 
         instead of by most recent usage.
+
+      embedding_heading: "Embedding"
+      allow_embedding_site_in_an_iframe: "Allow embedding site in an iframe"
+      allow_embedding_site_in_an_iframe_description: |
+        Allow this site to be embedded inside an iframe by relaxing frame restrictions.
       
       post_delete_time_limit_enabled: "Enforce Post Deletion Time Limit"
       post_delete_time_limit_enabled_description: |
